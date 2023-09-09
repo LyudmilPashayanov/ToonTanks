@@ -2,8 +2,12 @@
 
 
 #include "Tank.h"
+
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "EnhancedInputComponent.h"
+#include "Components/InputComponent.h"
 
 ATank::ATank()
 {
@@ -11,4 +15,40 @@ ATank::ATank()
 	SpringArm->SetupAttachment(RootComponent);
 	Camera = CreateDefaultSubobject<UCameraComponent>("Camera");
 	Camera->SetupAttachment(SpringArm);
+}
+
+void ATank::BeginPlay()
+{
+	Super::BeginPlay();
+
+	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+	if (PlayerController)
+	{
+		UE_LOG(LogTemp, Log, TEXT("11111111"));
+		UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
+		if (Subsystem)
+		{
+			UE_LOG(LogTemp, Log, TEXT("22222"));
+
+			Subsystem->AddMappingContext(PlayerMappingContext, 0);
+		}
+	}
+}
+
+void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent);
+	if(EnhancedInputComponent)
+	{
+		UE_LOG(LogTemp, Log, TEXT("333333333"));
+		EnhancedInputComponent->BindAction(MoveAction,ETriggerEvent::Triggered,this, &ATank::Move);
+	}
+}
+
+void ATank::Move(const FInputActionValue& Value)
+{
+	float AxisValue = Value.Get<float>();
+	FString valueString = FString::SanitizeFloat(AxisValue);
+	UE_LOG(LogTemp, Log, TEXT("axisValue : %s"), *valueString);
 }
