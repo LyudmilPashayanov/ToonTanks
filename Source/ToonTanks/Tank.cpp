@@ -8,6 +8,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "Components/InputComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 ATank::ATank()
 {
@@ -39,12 +40,30 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	if(EnhancedInputComponent)
 	{
 		EnhancedInputComponent->BindAction(MoveAction,ETriggerEvent::Triggered,this, &ATank::Move);
+		EnhancedInputComponent->BindAction(TurnAction,ETriggerEvent::Triggered,this, &ATank::Turn);
 	}
 }
 
+// If I want to make simultanously pressed A and D to cancel each other, I have to split this function to TurnLeft and TurnRight and use a shared FRotator for turning.
+
+void ATank::Turn(const FInputActionValue& Value)
+{
+	float AxisValue = Value.Get<float>();
+
+	float deltaTime = UGameplayStatics::GetWorldDeltaSeconds(this); // Could also use the Modifier "multiply by Delta time" in the Input Action options
+	float DeltaYaw = AxisValue * deltaTime * TankTurnSpeed;
+	FRotator deltaRotation = FRotator::ZeroRotator;
+	deltaRotation.Yaw = DeltaYaw;
+	AddActorLocalRotation(deltaRotation,true);
+}
+
+// If I want to make simultanously pressed W and S to cancel each other, I have to split this function to MoveForward and MoveBackwards and use a shared FVector for moving.
 void ATank::Move(const FInputActionValue& Value)
 {
 	float AxisValue = Value.Get<float>();
-	FString valueString = FString::SanitizeFloat(AxisValue);
-	UE_LOG(LogTemp, Log, TEXT("axisValue : %s"), *valueString);
+
+	float deltaTime = UGameplayStatics::GetWorldDeltaSeconds(this); // Could also use the Modifier "multiply by Delta time" in the Input Action options
+	float XDeltaSpeed = AxisValue * deltaTime * TankSpeed;
+	FVector deltaMove{XDeltaSpeed, 0, 0};
+	AddActorLocalOffset(deltaMove,true);
 }
