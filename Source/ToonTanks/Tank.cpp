@@ -10,6 +10,7 @@
 #include "Components/InputComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "DrawDebugHelpers.h"
+#include "ToonTanksPlayerController.h"
 
 ATank::ATank()
 {
@@ -23,7 +24,7 @@ void ATank::BeginPlay()
 {
 	Super::BeginPlay();
 
-	PlayerController = Cast<APlayerController>(GetController());
+	PlayerController = Cast<AToonTanksPlayerController>(GetController());
 	SetupInputSystem();
 }
 
@@ -38,7 +39,6 @@ void ATank::Tick(float DeltaTime)
 			false,
 			hitResult);
 		RotateTurret(hitResult.ImpactPoint);
-		DrawDebugSphere(GetWorld(), hitResult.ImpactPoint, 25.f, 12, FColor::Emerald, false, -1);
 	}
 }
 
@@ -64,6 +64,19 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 		EnhancedInputComponent->BindAction(TurnAction, ETriggerEvent::Triggered, this, &ATank::TurnCallback);
 		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Started, this, &ATank::FireCallback);
 	}
+}
+
+void ATank::HandleDestruction()
+{
+	Super::HandleDestruction();
+	SetActorHiddenInGame(true);
+	SetActorTickEnabled(false);
+
+	PlayerController->SetPlayerEnabledState(false);
+
+	UE_LOG(LogTemp, Log, TEXT(" ATank::HandleDestruction"));
+
+
 }
 
 // If I want to make simultanously pressed A and D to cancel each other, I have to split this function to TurnLeft and TurnRight and use a shared FRotator for turning.

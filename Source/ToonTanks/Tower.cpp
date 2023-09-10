@@ -45,3 +45,15 @@ bool ATower::TankInRange()
 	}
 	return false;
 }
+
+void ATower::HandleDestruction()
+{
+	Super::HandleDestruction();
+
+	UE_LOG(LogTemp, Log, TEXT(" ATower::HandleDestruction"));
+
+
+	Destroy();
+}
+
+

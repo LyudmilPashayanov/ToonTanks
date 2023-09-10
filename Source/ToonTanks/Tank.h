@@ -18,6 +18,7 @@ class TOONTANKS_API ATank : public ABasePawn
 public:
 	ATank();
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void HandleDestruction() override;
 
 protected:
 	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category=Input)
@@ -47,7 +48,7 @@ private:
 	UPROPERTY(EditAnywhere)
 	float TankTurnSpeed=400;
 
-	APlayerController* PlayerController;
+	class AToonTanksPlayerController* PlayerController;
 
 	void SetupInputSystem();
 

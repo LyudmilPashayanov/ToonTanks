@@ -35,4 +35,11 @@ void ABasePawn::Fire()
 	SpawnedProjectile->SetOwner(this);
 }
 
+void ABasePawn::HandleDestruction()
+{
+	//TODO: Visual and Sound effect here
+
+	UE_LOG(LogTemp, Log, TEXT("ABasePawn::HandleDestruction"));
+}
+
 
