@@ -26,4 +26,6 @@ private:
 protected:
 	void RotateTurret(FVector LookAtTarget);
 	void Fire();
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	TSubclassOf<class AProjectile> Projectile;
 };

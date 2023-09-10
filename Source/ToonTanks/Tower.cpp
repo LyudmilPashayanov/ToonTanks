@@ -42,7 +42,6 @@ bool ATower::TankInRange()
 		{
 			return true;
 		}
-		return false;
 	}
 	return false;
 }
