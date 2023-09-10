@@ -103,7 +103,7 @@ void ATank::MoveCallback(const FInputActionValue& Value)
 void ATank::FireCallback(const FInputActionValue& Value)
 {
 	bool shouldFire = Value.Get<bool>();
-	if(shouldFire)
+	if(shouldFire && bAlive)
 	{
 		Fire();
 	}
