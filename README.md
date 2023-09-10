@@ -8,6 +8,7 @@ Toon tanks is a simple action game created in Unreal Engine(5.2). You are playin
  - Setup input using new Enhanced Input System from Unreal.
  - Usage of HUD Widgets, to handle GameStart and GameOver states.
  - Usage of particles, camera shake effects and sounds.
+ - Usage of GameplayStatics.
 ## How to play
 Download and play the game from: [Toon Tank Google Drive](https://drive.google.com/drive/folders/1jkO-6izw3UWmT1-4bMbN8AtNw-HXE6mH?usp=sharing)
 ## Walkthrough of the game
