@@ -27,10 +27,14 @@ protected:
 	class UInputAction* MoveAction;
 	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category=Input)
 	class UInputAction* TurnAction;
+	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category=Input)
+	class UInputAction* FireAction;
 
-	void Turn(const FInputActionValue& Value);
-	void Move(const FInputActionValue& Value);
+	void TurnCallback(const FInputActionValue& Value);
+	void MoveCallback(const FInputActionValue& Value);
+	void FireCallback(const FInputActionValue& Value);
 	virtual void BeginPlay() override;
+
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
@@ -42,4 +46,12 @@ private:
 	float TankSpeed=400;
 	UPROPERTY(EditAnywhere)
 	float TankTurnSpeed=400;
+
+	APlayerController* PlayerController;
+
+	void SetupInputSystem();
+
+public:
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 };

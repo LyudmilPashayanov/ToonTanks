@@ -9,6 +9,7 @@
 #include "EnhancedInputComponent.h"
 #include "Components/InputComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "DrawDebugHelpers.h"
 
 ATank::ATank()
 {
@@ -22,7 +23,27 @@ void ATank::BeginPlay()
 {
 	Super::BeginPlay();
 
-	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+	PlayerController = Cast<APlayerController>(GetController());
+	SetupInputSystem();
+}
+
+// Called every frame
+void ATank::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	if (PlayerController)
+	{
+		FHitResult hitResult;
+		PlayerController->GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, 
+			false,
+			hitResult);
+		RotateTurret(hitResult.ImpactPoint);
+		DrawDebugSphere(GetWorld(), hitResult.ImpactPoint, 25.f, 12, FColor::Emerald, false, -1);
+	}
+}
+
+void ATank::SetupInputSystem()
+{
 	if (PlayerController)
 	{
 		UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
@@ -39,14 +60,15 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent);
 	if(EnhancedInputComponent)
 	{
-		EnhancedInputComponent->BindAction(MoveAction,ETriggerEvent::Triggered,this, &ATank::Move);
-		EnhancedInputComponent->BindAction(TurnAction,ETriggerEvent::Triggered,this, &ATank::Turn);
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ATank::MoveCallback);
+		EnhancedInputComponent->BindAction(TurnAction, ETriggerEvent::Triggered, this, &ATank::TurnCallback);
+		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Started, this, &ATank::FireCallback);
 	}
 }
 
 // If I want to make simultanously pressed A and D to cancel each other, I have to split this function to TurnLeft and TurnRight and use a shared FRotator for turning.
 
-void ATank::Turn(const FInputActionValue& Value)
+void ATank::TurnCallback(const FInputActionValue& Value)
 {
 	float AxisValue = Value.Get<float>();
 
@@ -58,7 +80,7 @@ void ATank::Turn(const FInputActionValue& Value)
 }
 
 // If I want to make simultanously pressed W and S to cancel each other, I have to split this function to MoveForward and MoveBackwards and use a shared FVector for moving.
-void ATank::Move(const FInputActionValue& Value)
+void ATank::MoveCallback(const FInputActionValue& Value)
 {
 	float AxisValue = Value.Get<float>();
 
@@ -66,4 +88,13 @@ void ATank::Move(const FInputActionValue& Value)
 	float XDeltaSpeed = AxisValue * deltaTime * TankSpeed;
 	FVector deltaMove{XDeltaSpeed, 0, 0};
 	AddActorLocalOffset(deltaMove,true);
+}
+
+void ATank::FireCallback(const FInputActionValue& Value)
+{
+	bool shouldFire = Value.Get<bool>();
+	if(shouldFire)
+	{
+		Fire();
+	}
 }
