@@ -28,6 +28,10 @@ private:
 	UParticleSystem* ParticleDeathEffect;
 	UPROPERTY(EditAnywhere, Category = "Sounds")
 	class USoundBase* DeathSound;
+
+	UPROPERTY(EditAnywhere, Category = "Camera Shake")
+	TSubclassOf<class  UCameraShakeBase> DeathCameraShakeClass;
+
 protected:
 	void RotateTurret(FVector LookAtTarget);
 	void Fire();

@@ -73,10 +73,7 @@ void ATank::HandleDestruction()
 	SetActorTickEnabled(false);
 
 	PlayerController->SetPlayerEnabledState(false);
-
-	UE_LOG(LogTemp, Log, TEXT(" ATank::HandleDestruction"));
-
-
+	bAlive = false;
 }
 
 // If I want to make simultanously pressed A and D to cancel each other, I have to split this function to TurnLeft and TurnRight and use a shared FRotator for turning.

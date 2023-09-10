@@ -19,6 +19,7 @@ public:
 	ATank();
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual void HandleDestruction() override;
+	bool bAlive = true;
 
 protected:
 	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category=Input)

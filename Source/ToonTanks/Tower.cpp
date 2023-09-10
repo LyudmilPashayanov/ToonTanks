@@ -38,7 +38,7 @@ bool ATower::TankInRange()
 	{
 		FVector TankLocation = Tank->GetActorLocation();
 		float DistanceToTank = FVector::Distance(TankLocation, GetActorLocation());
-		if (TurretRange > DistanceToTank)
+		if (TurretRange > DistanceToTank && Tank->bAlive)
 		{
 			return true;
 		}
@@ -49,10 +49,6 @@ bool ATower::TankInRange()
 void ATower::HandleDestruction()
 {
 	Super::HandleDestruction();
-
-	UE_LOG(LogTemp, Log, TEXT(" ATower::HandleDestruction"));
-
-
 	Destroy();
 }
 
