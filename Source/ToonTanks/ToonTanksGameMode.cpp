@@ -6,12 +6,26 @@
 #include "BasePawn.h"
 #include "ToonTanksPlayerController.h"
 #include "TimerManager.h"
+#include "Tank.h"
+#include "Tower.h"
 
 void AToonTanksGameMode::ActorDied(AActor* deadActor)
 {
 	if(ABasePawn* baseDeadPawn = Cast<ABasePawn>(deadActor))
 	{
 		baseDeadPawn->HandleDestruction();
+		if (deadActor->IsA(ATank::StaticClass()))
+		{
+			GameOver(false);
+		}
+		else if(deadActor->IsA(ATower::StaticClass()))
+		{
+			enemiesCount--;
+			if(enemiesCount <= 0)
+			{
+				GameOver(true);
+			}
+		}
 	}
 }
 
@@ -24,6 +38,8 @@ void AToonTanksGameMode::BeginPlay()
 
 void AToonTanksGameMode::HandleGameStart()
 {
+	enemiesCount = GetEnemiesCount();
+
 	if(AToonTanksPlayerController* ToonTanksPlayerController = Cast<AToonTanksPlayerController>(UGameplayStatics::GetPlayerController(this,0)))
 	{
 		ToonTanksPlayerController->SetPlayerEnabledState(false);
@@ -38,3 +54,11 @@ void AToonTanksGameMode::HandleGameStart()
 		GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, StartDelay, true); // looping timer which will be called every 'FireRate' seconds.
 	}
 }
+
+int32 AToonTanksGameMode::GetEnemiesCount()
+{
+	TArray<AActor*> actors;
+	UGameplayStatics::GetAllActorsOfClass(this, ATower::StaticClass(), actors);
+	return actors.Num();
+}
+

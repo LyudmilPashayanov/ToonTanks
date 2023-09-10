@@ -24,6 +24,10 @@ private:
 	UStaticMeshComponent* TurretMesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Base Tank Properties", meta = (AllowPrivateAccess = true))
 	USceneComponent* ProjectileSpawnComponent;
+	UPROPERTY(EditAnywhere)
+	UParticleSystem* ParticleDeathEffect;
+	UPROPERTY(EditAnywhere, Category = "Sounds")
+	class USoundBase* DeathSound;
 protected:
 	void RotateTurret(FVector LookAtTarget);
 	void Fire();

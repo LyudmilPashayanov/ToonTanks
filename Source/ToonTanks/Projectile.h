@@ -34,4 +34,16 @@ private:
 
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent *HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+	UPROPERTY(EditAnywhere, Category = "Particles")
+	class UParticleSystem* HitParticles;
+
+	UPROPERTY(VisibleAnywhere)
+	class UParticleSystemComponent* ParticleSystemComponent; 
+	
+	UPROPERTY(EditAnywhere, Category = "Sounds")
+	class USoundBase* LaunchSound;
+
+	UPROPERTY(EditAnywhere, Category = "Sounds")
+	USoundBase* HitSound;
 };

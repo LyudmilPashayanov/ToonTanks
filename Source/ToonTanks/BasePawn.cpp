@@ -37,9 +37,15 @@ void ABasePawn::Fire()
 
 void ABasePawn::HandleDestruction()
 {
-	//TODO: Visual and Sound effect here
+	if (ParticleDeathEffect)
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParticleDeathEffect, GetActorLocation(),GetActorRotation());
+	}
 
-	UE_LOG(LogTemp, Log, TEXT("ABasePawn::HandleDestruction"));
+	if (DeathSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, DeathSound, GetActorLocation());
+	}
 }
 
 

@@ -22,12 +22,15 @@ protected:
 	virtual void BeginPlay() override;
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void StartGame();
+	void GameOver(bool bWonGame);
+	
+	UFUNCTION(BlueprintImplementableEvent)
+	void StartGame(); // handled in the Blueprint event graph.
 
 private:
-	class ATank* PlayerTank;
-	
-	
+	class ATank* PlayerTank;	
 	float StartDelay = 3.f;
+	int32 enemiesCount;
 	void HandleGameStart();
+	int32 GetEnemiesCount();
 };
